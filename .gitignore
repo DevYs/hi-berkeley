@@ -1,0 +1,6 @@
+.idea
+bdb
+build
+out
+.DS_Store
+.gradle
