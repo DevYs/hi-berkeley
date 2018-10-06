@@ -10,11 +10,8 @@ import org.junit.Test;
 
 import java.util.Iterator;
 import java.util.Set;
-import java.util.logging.Logger;
 
 public class BerkeleyDbTest {
-
-    private final Logger logger = Logger.getLogger(BerkeleyDbTest.class.getSimpleName());
 
     private PartMapper partMapper;
     private SupplierMapper supplierMapper;

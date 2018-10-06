@@ -16,6 +16,7 @@ package devy.hi.berkeley;
 import com.sleepycat.bind.tuple.MarshalledTupleKeyEntity;
 import com.sleepycat.bind.tuple.TupleInput;
 import com.sleepycat.bind.tuple.TupleOutput;
+import devy.hi.berkeley.marshal.MarshalKeyHelper;
 
 import java.io.Serializable;
 
@@ -80,31 +81,25 @@ public class Supplier implements Serializable, MarshalledTupleKeyEntity {
     // --- MarshalledTupleKeyEntity implementation ---
 
     public void marshalPrimaryKey(TupleOutput keyOutput) {
-
-        keyOutput.writeString(this.supplierNumber);
+        MarshalKeyHelper
+                .marshalPrimaryKeyHelper(keyOutput)
+                .marshalPrimaryKey(this.supplierNumber);
     }
 
     public void unmarshalPrimaryKey(TupleInput keyInput) {
-
-        this.supplierNumber = keyInput.readString();
+        MarshalKeyHelper
+                .unMarshalPrimaryKeyHelper(keyInput)
+                .unMarshalPrimaryKey(this.supplierNumber);
     }
 
     public boolean marshalSecondaryKey(String keyName, TupleOutput keyOutput) {
-
-        if (keyName.equals(SupplierCityIdx.class.getSimpleName())) {
-            if (this.city != null) {
-                keyOutput.writeString(this.city);
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            throw new UnsupportedOperationException(keyName);
-        }
+        return MarshalKeyHelper
+                .marshalSecondaryKeyHelper(keyName, keyOutput)
+                .marshalSecondaryKey(SupplierCityIdx.class, this.city)
+                .marshal();
     }
 
     public boolean nullifyForeignKey(String keyName) {
-
         throw new UnsupportedOperationException(keyName);
     }
 }

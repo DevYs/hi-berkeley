@@ -3,6 +3,7 @@ package devy.hi.berkeley;
 import com.sleepycat.bind.tuple.MarshalledTupleEntry;
 import com.sleepycat.bind.tuple.TupleInput;
 import com.sleepycat.bind.tuple.TupleOutput;
+import devy.hi.berkeley.marshal.MarshalKeyHelper;
 
 /**
  * FkSecondaryQuery를 정의할때 사용되는 키 객체의 구현은 MarshalledTupleEntry 인터페이스를 직접 구현하여도 상관없다.
@@ -35,13 +36,15 @@ public class ShipmentPartFk implements MarshalledTupleEntry {
     }
 
     public void marshalEntry(TupleOutput keyOutput) {
-
-        keyOutput.writeString(this.number);
+        MarshalKeyHelper
+                .marshalPrimaryKeyHelper(keyOutput)
+                .marshalPrimaryKey(this.number);
     }
 
     public void unmarshalEntry(TupleInput keyInput) {
-
-        this.number = keyInput.readString();
+        MarshalKeyHelper
+                .unMarshalPrimaryKeyHelper(keyInput)
+                .unMarshalPrimaryKey(this.number);
     }
 
 }

@@ -16,6 +16,7 @@ package devy.hi.berkeley;
 import com.sleepycat.bind.tuple.MarshalledTupleEntry;
 import com.sleepycat.bind.tuple.TupleInput;
 import com.sleepycat.bind.tuple.TupleOutput;
+import devy.hi.berkeley.marshal.MarshalKeyHelper;
 
 /**
  * A ShipmentKey serves as the key in the key/data pair for a shipment entity.
@@ -61,14 +62,16 @@ public class ShipmentKey implements MarshalledTupleEntry {
     }
 
     public void marshalEntry(TupleOutput keyOutput) {
-
-        keyOutput.writeString(this.partNumber);
-        keyOutput.writeString(this.supplierNumber);
+        MarshalKeyHelper
+                .marshalPrimaryKeyHelper(keyOutput)
+                .marshalPrimaryKey(this.partNumber)
+                .marshalPrimaryKey(this.supplierNumber);
     }
 
     public void unmarshalEntry(TupleInput keyInput) {
-
-        this.partNumber = keyInput.readString();
-        this.supplierNumber = keyInput.readString();
+        MarshalKeyHelper
+                .unMarshalPrimaryKeyHelper(keyInput)
+                .unMarshalPrimaryKey(this.partNumber)
+                .unMarshalPrimaryKey(this.supplierNumber);
     }
 }

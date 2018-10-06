@@ -16,6 +16,7 @@ package devy.hi.berkeley;
 import com.sleepycat.bind.tuple.MarshalledTupleKeyEntity;
 import com.sleepycat.bind.tuple.TupleInput;
 import com.sleepycat.bind.tuple.TupleOutput;
+import devy.hi.berkeley.marshal.MarshalKeyHelper;
 
 import java.io.Serializable;
 
@@ -73,34 +74,26 @@ public class Shipment implements Serializable, MarshalledTupleKeyEntity {
     // --- MarshalledTupleKeyEntity implementation ---
 
     public void marshalPrimaryKey(TupleOutput keyOutput) {
-
-        keyOutput.writeString(this.partNumber);
-        keyOutput.writeString(this.supplierNumber);
+        MarshalKeyHelper
+                .marshalPrimaryKeyHelper(keyOutput)
+                .marshalPrimaryKey(this.partNumber)
+                .marshalPrimaryKey(this.supplierNumber);
     }
 
     public void unmarshalPrimaryKey(TupleInput keyInput) {
-
-        this.partNumber = keyInput.readString();
-        this.supplierNumber = keyInput.readString();
+        MarshalKeyHelper
+                .unMarshalPrimaryKeyHelper(keyInput)
+                .unMarshalPrimaryKey(this.partNumber)
+                .unMarshalPrimaryKey(this.supplierNumber);
     }
 
     public boolean marshalSecondaryKey(String keyName, TupleOutput keyOutput) {
 
-        if (keyName.equals(ShipmentPartFk.class.getSimpleName())) {
-            if(this.partNumber != null) {
-                keyOutput.writeString(this.partNumber);
-                return true;
-            }
-            return false;
-        } else if (keyName.equals(ShipmentSupplierFk.class.getSimpleName())) {
-            if(this.supplierNumber != null) {
-                keyOutput.writeString(this.supplierNumber);
-                return true;
-            }
-            return false;
-        } else {
-            throw new UnsupportedOperationException(keyName);
-        }
+        return MarshalKeyHelper
+                .marshalSecondaryKeyHelper(keyName, keyOutput)
+                .marshalSecondaryKey(ShipmentPartFk.class, this.partNumber)
+                .marshalSecondaryKey(ShipmentSupplierFk.class, this.supplierNumber)
+                .marshal();
     }
 
     public boolean nullifyForeignKey(String keyName) {
