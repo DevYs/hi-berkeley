@@ -38,3 +38,8 @@ repositories {
         url 'http://download.oracle.com/maven'
     }
 }
+
+javadoc {
+    source 'src.main.java'
+    options.encoding = 'UTF-8'
+}
